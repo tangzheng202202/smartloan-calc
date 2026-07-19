@@ -122,7 +122,7 @@ Play Console 要求提供**可公开访问的隐私政策 URL**。零成本托�
 2. 仓库 Settings → Pages → Source 选 `Deploy from a branch` → 分支 `main`、目录 `/docs` → Save。
 3. 约 1 分钟后得到 URL `https://<你的用户名>.github.io/<仓库名>/`，填入 Play Console「商店设置 → 隐私政策」与「应用内容 → 隐私政策声明」两处；同一 URL 也可用于 iOS App Store Connect。
 4. 站点特性：单文件 `docs/index.html`，简体中文/繁體中文/English 按浏览器语言自动切换（可点顶部按钮手动切，URL 支持 `#zh-CN` / `#zh-TW` / `#en`），自适应深浅色，已用无头 Chrome 三语渲染验证；`docs/.nojekyll` 已放置。
-5. ⚠️ **发布前务必替换页面中的占位邮箱** `support@smartloan.example`（`docs/index.html` 中共 3 处，每语一处）为你的真实支持邮箱。
+5. 页面邮箱已替换为真实支持邮箱 `tangzheng202202@gmail.com`（`docs/index.html` 共 3 处，每语一处）。
 
 ### 附录：隐私政策全文（与应用内一致，可直接发布）
 
@@ -160,7 +160,7 @@ If any network feature is introduced in the future, this policy will be updated 
 
 如未來版本引入任何網路功能，我們將更新本政策並在應用內顯著提示。
 
-联系与支持：请将支持邮箱替换为你的真实邮箱后一并发布（当前占位：support@smartloan.example）。
+联系与支持：support@ 邮箱已统一为 tangzheng202202@gmail.com（隐私政策页已上线）。
 
 ---
 

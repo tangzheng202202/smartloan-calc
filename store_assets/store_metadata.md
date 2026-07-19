@@ -142,5 +142,5 @@ Results are for reference only; final approval is subject to your bank.
 6. 如未来版本引入任何网络功能，将更新本政策并在应用内显著提示。
 
 ### 联系与支持
-- 支持邮箱（上架前替换为真实邮箱）：support@smartloan.example
-- 隐私政策 URL（上架前部署静态页）：https://smartloan.example/privacy
+- 支持邮箱：tangzheng202202@gmail.com
+- 隐私政策 URL（已上线，三语自适应）：https://tangzheng202202.github.io/smartloan-calc/
