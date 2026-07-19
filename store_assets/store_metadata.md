@@ -54,13 +54,15 @@ Results are for reference only; final approval is subject to your bank.
 **4+**（无受限内容；工具类应用）
 
 ### 截图清单
-| 尺寸 | 画面 1 | 画面 2 | 画面 3 | 画面 4 | 画面 5 |
-|---|---|---|---|---|---|
-| 6.5"（iPhone 15 Pro Max 等） | 计算器主页（大数字月供 + 输入区） | 还款趋势图 + 占比饼图 | 还款计划表（360 期） | 提前还款模拟对比 | 方案库多方案对比 |
-| 5.5"（iPhone 8 Plus 等） | 计算器主页 | 还款计划表 | 提前还款模拟 | 还款能力评估 | 设置页（深色模式） |
-| iPad（12.9"） | 计算器主页（宽屏布局） | 还款计划表 | 图表区 | 方案库 | 利率换算 |
+✅ **已产出正式套装**：`store_assets/screenshots_store/`（浅色/深色两套，每套 5 画面，含无文案版与文案带版，详见该目录 README）
 
-建议：浅色 / 深色各出一套，重点画面加大字报式卖点文案（如"月供，一目了然"）。
+| 商店档位 | 目录 | 尺寸 | 说明 |
+|---|---|---|---|
+| iPhone 6.9" | `screenshots_store/iphone6.9/{light,dark}/` | 1320×2868 | App Store 可直接用 6.9" 档自动缩配全部小屏 iPhone 档位（6.5"/5.5" 无需另做） |
+| iPad 13" | `screenshots_store/ipad13/{light,dark}/` | 2064×2752 | App Store iPad 档需单独上传 |
+| Google Play 手机 | `screenshots_store/android/{light,dark}/` | 1080×2160（2:1） | 由 iPhone 原图派生（来源说明见 screenshots_store/README） |
+
+五画面顺序：01 计算器主页（月供利息，一算便知）→ 02 图表区（本金利息，一目了然）→ 03 还款计划表（360 期还款计划，尽在掌握）→ 04 提前还款（提前还款，省多少一眼看懂）→ 05 我的/深色模式（深色模式，护眼随行）。默认参数 100 万/3.40%/30 年/等额本息，月供 ¥4,435 贯穿全套。
 
 ### 审核备注建议
 - 无需账号、无内购、无广告、无网络权限使用。
@@ -117,7 +119,7 @@ Results are for reference only; final approval is subject to your bank.
 |---|---|---|---|
 | 应用图标 | 512×512 PNG | ✅ 已生成 | `store_assets/icon_512.png` |
 | 置顶大图（Feature Graphic） | 1024×500 PNG | ✅ 已生成 | `store_assets/feature_graphic_1024x500.png` |
-| 手机截图 | 2–8 张，16:9 或 9:16，最短边 ≥320px | ✅ 可复用 iOS 巡游截图 | `screenshots/`（calculator / charts / schedule / tools / prepayment / rate_converter / plans / settings，共 8 张，1206×2622，Play 接受） |
+| 手机截图 | 2–8 张，16:9 或 9:16，最短边 ≥320px | ✅ 已产出正式套装 | `screenshots_store/android/{light,dark}/`（1080×2160，5 画面×2 外观，含 caption 版；由 iPhone 原图派生，说明见 screenshots_store/README） |
 | 隐私政策 URL | 公开可访问 | ⬜ 待部署 | 托管方案与政策全文见 `store_assets/google_play_release_guide.md` 第 7 节 |
 | 发布包 | AAB（上传密钥签名） | ✅ 已构建 | `build/app/outputs/bundle/release/app-release.aab`（61.0 MB，arm64-v8a/armeabi-v7a/x86_64） |
 | 发布说明 | 500 字符内/语言 | ⬜ 送审时填写 | 建议：「首个版本：房贷/车贷/消费贷计算、还款计划表、提前还款模拟、LPR 换算，纯离线。」 |
