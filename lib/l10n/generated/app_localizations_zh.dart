@@ -95,6 +95,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loanAmountLabel => '贷款金额';
 
   @override
+  String get houseTotalPriceLabel => '房屋总价';
+
+  @override
+  String get carTotalPriceLabel => '车辆总价';
+
+  @override
+  String get downPaymentRatioLabel => '首付比例';
+
+  @override
+  String get downPaymentAmountLabel => '首付金额';
+
+  @override
+  String costSummaryMortgage(Object cost, Object down) {
+    return '首付 $down · 购房总成本 $cost';
+  }
+
+  @override
+  String costSummaryCar(Object cost, Object down) {
+    return '首付 $down · 购车总成本 $cost';
+  }
+
+  @override
+  String get zeroLoanHint => '首付已覆盖总价，无需贷款';
+
+  @override
   String get unitWan => '万元';
 
   @override
@@ -598,6 +623,31 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get loanAmountLabel => '貸款金額';
+
+  @override
+  String get houseTotalPriceLabel => '房屋總價';
+
+  @override
+  String get carTotalPriceLabel => '車輛總價';
+
+  @override
+  String get downPaymentRatioLabel => '首付比例';
+
+  @override
+  String get downPaymentAmountLabel => '首付金額';
+
+  @override
+  String costSummaryMortgage(Object cost, Object down) {
+    return '首付 $down · 購屋總成本 $cost';
+  }
+
+  @override
+  String costSummaryCar(Object cost, Object down) {
+    return '首付 $down · 購車總成本 $cost';
+  }
+
+  @override
+  String get zeroLoanHint => '首付已涵蓋總價，無需貸款';
 
   @override
   String get unitWan => '萬元';

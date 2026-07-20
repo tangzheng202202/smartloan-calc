@@ -57,11 +57,15 @@ void main() {
         .data!;
   }
 
-  /// 在懒加载 ListView 中向下滚动直至目标可见
-  Future<void> scrollTo(WidgetTester tester, Finder target) async {
+  /// 在懒加载 ListView 中滚动直至目标可见（delta 正数向下、负数向上）
+  Future<void> scrollTo(
+    WidgetTester tester,
+    Finder target, {
+    double delta = 300,
+  }) async {
     await tester.scrollUntilVisible(
       target,
-      300,
+      delta,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle(const Duration(milliseconds: 100));
@@ -91,30 +95,65 @@ void main() {
     await shot('02_home_after_disclaimer');
   });
 
-  testWidgets('02 计算器：默认结果 + 还款方式/金额联动', (tester) async {
+  testWidgets('02 计算器：默认结果 + 还款方式/首付联动', (tester) async {
     await pumpApp(tester);
+    // 全新安装会先弹免责声明（--plain-name 单跑本用例时），先确认
+    if (find.text('我已阅读并同意').evaluate().isNotEmpty) {
+      await tester.tap(find.text('我已阅读并同意'));
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    }
 
-    // 默认输入（100万/3.40%/30年/等额本息）结果区：月供非空且含 ¥
+    // 输入区（首屏可见）：总价/首付/派生贷款金额
+    expect(find.text('房屋总价'), findsWidgets);
+    expect(find.text('首付比例'), findsWidgets);
+    expect(find.text('100 万元'), findsWidgets); // 125万 − 20% = 100万
+
+    // 滚动到结果卡：默认月供（100万/3.40%/30年/等额本息）
+    await scrollTo(tester, find.byKey(const Key('result.monthlyPayment')));
     expect(find.text('月供'), findsWidgets);
     final m1 = monthlyText(tester);
     expect(m1, isNotEmpty);
     expect(m1, contains('¥'));
+    // 结果卡成本行（首付 · 购房总成本）
+    expect(find.byKey(const Key('result.costLine')), findsWidgets);
 
-    // 切换还款方式 → 等额本金：月供数值变化
-    // （首屏视口内直接可点，不滚动，避免懒加载列表回收顶部输入框）
+    // 切换还款方式 → 等额本金（位于结果卡上方，向上滚回）：月供数值变化
+    await scrollTo(tester, find.text('等额本金'), delta: -300);
     await tester.tap(find.text('等额本金'));
     await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    await scrollTo(tester, find.byKey(const Key('result.monthlyPayment')));
     final m2 = monthlyText(tester);
     expect(m2, isNot(m1));
 
-    // 切回等额本息，修改贷款金额 100 → 200 万：结果联动变化
+    // 切回等额本息，修改总价 125 → 250 万：首付按 20% 重算，贷款派生 200 万
+    await scrollTo(tester, find.text('等额本息'), delta: -300);
     await tester.tap(find.text('等额本息'));
     await tester.pumpAndSettle(const Duration(milliseconds: 200));
-    await tester.enterText(find.byKey(const Key('input.amount')), '200');
+    await scrollTo(
+      tester,
+      find.byKey(const Key('input.totalPrice')),
+      delta: -300,
+    );
+    await tester.enterText(find.byKey(const Key('input.totalPrice')), '250');
     await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    expect(find.text('200 万元'), findsWidgets); // 派生贷款金额联动
+    await scrollTo(tester, find.byKey(const Key('result.monthlyPayment')));
     final m3 = monthlyText(tester);
     expect(m3, isNot(m1));
     expect(m3, contains('¥'));
+
+    // 修改首付金额 50 → 25 万：贷款回到 225 万，月供再次联动
+    await scrollTo(
+      tester,
+      find.byKey(const Key('input.downPayment')),
+      delta: -300,
+    );
+    await tester.enterText(find.byKey(const Key('input.downPayment')), '25');
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    expect(find.text('225 万元'), findsWidgets);
+    await scrollTo(tester, find.byKey(const Key('result.monthlyPayment')));
+    final m4 = monthlyText(tester);
+    expect(m4, isNot(m3));
     await shot('03_calculator_result');
 
     // 常驻免责声明在结果区展示（位于折线图上方的卡片之后，滚动后断言）

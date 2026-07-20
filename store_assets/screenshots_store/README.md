@@ -47,5 +47,5 @@ screenshots_store/
 ## 制作管线（可复现）
 
 1. `integration_test/screenshot_test.dart`：巡游用例，逐页停留 15s 并打印 `SHOT_PAGE:<页名>` 标记；
-2. `tools/capture_store_shots.sh <UDID> <组合名> <light|dark>`：设外观 → 状态栏覆盖（09:41/满电/满信号）→ 后台跑巡游 → 按标记定时 `simctl io screenshot`；
+2. `tools/capture_store_shots.sh <UDID> <组合名> <light|dark>`：设外观 → 状态栏覆盖（09:41/满电/满信号）→ 后台跑巡游 → 按标记定时 `simctl io screenshot`；**组合名必须按 `iphone6.9_light` / `iphone6.9_dark` / `ipad13_light` / `ipad13_dark` 命名**（后处理脚本按 `/tmp/store_shots/<组合名>/` 取图，名字不匹配会静默用过期旧图）；
 3. `tools/postprocess_store_shots.py`：分发原图 → 派生 android 尺寸 → 生成 letterbox caption 版。

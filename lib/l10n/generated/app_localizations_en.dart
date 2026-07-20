@@ -96,6 +96,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loanAmountLabel => 'Loan Amount';
 
   @override
+  String get houseTotalPriceLabel => 'Home Price';
+
+  @override
+  String get carTotalPriceLabel => 'Car Price';
+
+  @override
+  String get downPaymentRatioLabel => 'Down Payment Ratio';
+
+  @override
+  String get downPaymentAmountLabel => 'Down Payment';
+
+  @override
+  String costSummaryMortgage(Object cost, Object down) {
+    return 'Down $down · Total home cost $cost';
+  }
+
+  @override
+  String costSummaryCar(Object cost, Object down) {
+    return 'Down $down · Total car cost $cost';
+  }
+
+  @override
+  String get zeroLoanHint =>
+      'Down payment covers the full price — no loan needed';
+
+  @override
   String get unitWan => '×10k';
 
   @override

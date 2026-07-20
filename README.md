@@ -99,7 +99,7 @@ flutter build appbundle --release    # 发布包：build/app/outputs/bundle/rele
 ```
 
 - **签名**：`android/key.properties`（`storeFile=upload-keystore.jks`，alias `upload`）→ `android/app/build.gradle.kts` 读取并配置 release signingConfig。两文件均在 `.gitignore` 中，**务必离线备份**，丢失只能向 Google 申请重置上传密钥。
-- **图标**：`flutter_launcher_icons` 已配置（`pubspec.yaml`），母图在 `assets/icon/`（PIL 生成，脚本 `../tools/generate_icons.py`）；改图后重跑 `dart run flutter_launcher_icons`。
+- **图标**：`flutter_launcher_icons` 已配置（`pubspec.yaml`），母图在 `assets/icon/`（PIL 生成，脚本 `tools/generate_icons.py`）；改图后重跑 `dart run flutter_launcher_icons`。
 - **权限**：release 合并清单无 `INTERNET`（纯离线卖点成立）；debug 包带 INTERNET 属调试模式正常注入。
 - **完整上架流程**：见 `store_assets/google_play_release_guide.md`。
 

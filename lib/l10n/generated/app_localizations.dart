@@ -261,6 +261,48 @@ abstract class AppLocalizations {
   /// **'贷款金额'**
   String get loanAmountLabel;
 
+  /// No description provided for @houseTotalPriceLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'房屋总价'**
+  String get houseTotalPriceLabel;
+
+  /// No description provided for @carTotalPriceLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'车辆总价'**
+  String get carTotalPriceLabel;
+
+  /// No description provided for @downPaymentRatioLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'首付比例'**
+  String get downPaymentRatioLabel;
+
+  /// No description provided for @downPaymentAmountLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'首付金额'**
+  String get downPaymentAmountLabel;
+
+  /// No description provided for @costSummaryMortgage.
+  ///
+  /// In zh, this message translates to:
+  /// **'首付 {down} · 购房总成本 {cost}'**
+  String costSummaryMortgage(Object cost, Object down);
+
+  /// No description provided for @costSummaryCar.
+  ///
+  /// In zh, this message translates to:
+  /// **'首付 {down} · 购车总成本 {cost}'**
+  String costSummaryCar(Object cost, Object down);
+
+  /// No description provided for @zeroLoanHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'首付已覆盖总价，无需贷款'**
+  String get zeroLoanHint;
+
   /// No description provided for @unitWan.
   ///
   /// In zh, this message translates to:

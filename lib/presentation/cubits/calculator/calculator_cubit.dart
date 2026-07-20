@@ -78,6 +78,7 @@ class CalculatorCubit extends Cubit<CalculatorState> {
 
   /// 更新输入并即时重算
   void updateInput(LoanInput input) {
+    input = input.normalizeDownPayment();
     final errors = input.validate();
     if (errors.isNotEmpty) {
       emit(state.copyWith(input: input, errors: errors));

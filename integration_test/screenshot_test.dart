@@ -65,7 +65,10 @@ void main() {
       await tester.pumpAndSettle(const Duration(milliseconds: 200));
     }
 
-    // 01 计算器主页（输入区 + 月供大数字）
+    // 01 计算器主页（派生贷款金额 + 月供大数字同框：固定下滚 300，
+    // 不用 scrollUntilVisible——目标在 Column 中已构建会误滚到底）
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -300));
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     await dwell('01_calculator');
 
     // 02 图表区（还款趋势 + 本金/利息占比）

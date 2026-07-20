@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/loan_category.dart';
+import '../../../domain/entities/loan_input.dart';
 import '../../../domain/entities/repayment_method.dart';
 import '../../../domain/entities/saved_plan.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -10,6 +12,7 @@ import '../../cubits/calculator/calculator_cubit.dart';
 import '../../cubits/plans/plans_cubit.dart';
 import '../../widgets/amount_input.dart';
 import '../../widgets/disclaimer_footer.dart';
+import '../../widgets/down_payment_section.dart';
 import '../../widgets/l10n_helpers.dart';
 import '../../widgets/pie_chart_card.dart';
 import '../../widgets/rate_input.dart';
@@ -30,15 +33,9 @@ class CalculatorPage extends StatelessWidget {
 
   void _switchCategory(CalculatorCubit cubit, LoanCategory c) {
     cubit.update((input) {
-      var next = input.copyWith(
-        category: c,
-        annualRate: (_defaultRates[c] ?? 3.45) / 100,
-      );
-      // 非房贷强制关闭组合贷
-      if (c != LoanCategory.mortgage && next.isCombined) {
-        next = next.copyWith(isCombined: false);
-      }
-      return next;
+      return input
+          .withCategoryDefaults(c)
+          .copyWith(annualRate: (_defaultRates[c] ?? 3.45) / 100);
     });
   }
 
@@ -55,6 +52,24 @@ class CalculatorPage extends StatelessWidget {
         commercialAnnualRate: input.annualRate,
       );
     });
+  }
+
+  /// 结果卡附加行：首付 · 购房/车总成本（消费贷返回 null 不展示）
+  String? _costLine(
+    AppLocalizations l10n,
+    LoanInput input,
+    CalculatorState state,
+  ) {
+    final down = input.downPaymentAmount;
+    if (!input.hasDownPayment || down == null) return null;
+    final downText = Formatters.currency(down);
+    final costText = Formatters.currency(
+      down + state.result.total.totalPayment,
+    );
+    // 注意：gen-l10n 占位参数按字母序排列（cost 在前，down 在后）
+    return input.category == LoanCategory.car
+        ? l10n.costSummaryCar(costText, downText)
+        : l10n.costSummaryMortgage(costText, downText);
   }
 
   Future<void> _savePlan(BuildContext context) async {
@@ -145,7 +160,10 @@ class CalculatorPage extends StatelessWidget {
                 ),
 
               // ---- 金额与利率 ----
-              if (!input.isCombined) ...[
+              // 房贷/车贷：总价 + 首付 → 贷款金额派生；消费贷：直输贷款金额
+              if (input.hasDownPayment)
+                DownPaymentSection(input: input, cubit: cubit),
+              if (!input.hasDownPayment)
                 AmountInput(
                   label: l10n.loanAmountLabel,
                   unit: l10n.unitWan,
@@ -153,22 +171,20 @@ class CalculatorPage extends StatelessWidget {
                   onChanged: (wan) =>
                       cubit.update((i) => i.copyWith(principal: wan * 10000)),
                 ),
+              if (!input.isCombined)
                 RateInput(
                   label: l10n.rateLabel,
                   valuePercent: input.annualRate * 100,
                   onChanged: (pct) =>
                       cubit.update((i) => i.copyWith(annualRate: pct / 100)),
-                ),
-              ] else ...[
+                )
+              else ...[
                 AmountInput(
                   label: l10n.fundAmountLabel,
                   unit: l10n.unitWan,
                   valueWan: input.fundPrincipal / 10000,
                   onChanged: (wan) => cubit.update(
-                    (i) => i.copyWith(
-                      fundPrincipal: wan * 10000,
-                      principal: (wan * 10000) + i.commercialPrincipal,
-                    ),
+                    (i) => i.withCombinedAmounts(fundYuan: wan * 10000),
                   ),
                 ),
                 RateInput(
@@ -185,10 +201,7 @@ class CalculatorPage extends StatelessWidget {
                   unit: l10n.unitWan,
                   valueWan: input.commercialPrincipal / 10000,
                   onChanged: (wan) => cubit.update(
-                    (i) => i.copyWith(
-                      commercialPrincipal: wan * 10000,
-                      principal: i.fundPrincipal + (wan * 10000),
-                    ),
+                    (i) => i.withCombinedAmounts(commercialYuan: wan * 10000),
                   ),
                 ),
                 RateInput(
@@ -244,7 +257,19 @@ class CalculatorPage extends StatelessWidget {
                   result: state.result,
                   method: input.method,
                   schedule: state.schedule,
+                  costLine: _costLine(l10n, input, state),
                 ),
+                if (input.hasDownPayment && input.principal <= 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      l10n.zeroLoanHint,
+                      key: const Key('result.zeroLoanHint'),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 12),
                 // 常驻免责声明
                 DisclaimerFooter(text: l10n.disclaimerBanner),

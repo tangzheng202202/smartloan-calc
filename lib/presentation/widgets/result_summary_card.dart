@@ -18,11 +18,15 @@ class ResultSummaryCard extends StatelessWidget {
   /// 还款计划（用于取末月月供）
   final List<ScheduleItem> schedule;
 
+  /// 附加行：首付 · 购房/车总成本（null 不展示）
+  final String? costLine;
+
   const ResultSummaryCard({
     super.key,
     required this.result,
     required this.method,
     required this.schedule,
+    this.costLine,
   });
 
   @override
@@ -93,6 +97,16 @@ class ResultSummaryCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (costLine != null) ...[
+              const SizedBox(height: 10),
+              Text(
+                costLine!,
+                key: const Key('result.costLine'),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),

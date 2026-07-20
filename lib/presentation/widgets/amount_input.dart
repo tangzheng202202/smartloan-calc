@@ -23,6 +23,9 @@ class AmountInput extends StatefulWidget {
   /// 单位文案
   final String unit;
 
+  /// 输入框 Key（测试定位用），默认 input.amount
+  final Key fieldKey;
+
   const AmountInput({
     super.key,
     required this.valueWan,
@@ -31,6 +34,7 @@ class AmountInput extends StatefulWidget {
     required this.unit,
     this.minWan = 1,
     this.maxWan = 2000,
+    this.fieldKey = const Key('input.amount'),
   });
 
   @override
@@ -97,7 +101,7 @@ class _AmountInputState extends State<AmountInput> {
             SizedBox(
               width: 140,
               child: TextField(
-                key: const Key('input.amount'),
+                key: widget.fieldKey,
                 controller: _controller,
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
