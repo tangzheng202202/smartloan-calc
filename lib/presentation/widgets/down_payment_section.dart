@@ -8,8 +8,8 @@ import 'amount_input.dart';
 
 /// 首付输入区（仅房贷/车贷展示）
 ///
-/// 总价 → 首付比例（0–80%）→ 首付金额 三者联动，
-/// 贷款金额为派生值（总价 − 首付金额），醒目展示、不可直接编辑。
+/// 总价 → 首付比例（15%–80%，2024-09 起商贷最低首付 15%）→ 首付金额
+/// 三者联动，贷款金额为派生值（总价 − 首付金额），醒目展示、不可直接编辑。
 class DownPaymentSection extends StatelessWidget {
   final LoanInput input;
   final CalculatorCubit cubit;
@@ -67,10 +67,10 @@ class DownPaymentSection extends StatelessWidget {
         ),
         Slider(
           key: const Key('input.downPaymentRatio'),
-          value: ratioPct.clamp(0.0, 80.0),
-          min: 0,
+          value: ratioPct.clamp(15.0, 80.0),
+          min: 15,
           max: 80,
-          divisions: 80,
+          divisions: 65,
           label: '${ratioPct.round()}%',
           onChanged: (pct) =>
               cubit.update((i) => i.withDownPaymentRatio(pct / 100)),
@@ -82,7 +82,7 @@ class DownPaymentSection extends StatelessWidget {
           label: l10n.downPaymentAmountLabel,
           unit: l10n.unitWan,
           valueWan: downWan,
-          minWan: 0,
+          minWan: totalWan * LoanInput.minDownPaymentRatio,
           onChanged: (wan) =>
               cubit.update((i) => i.withDownPaymentAmount(wan * 10000)),
         ),

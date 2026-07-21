@@ -76,11 +76,11 @@ void main() {
   });
 
   group('城市政策（移植自 Swift 版测试口径）', () {
-    test('北京：公积金上限120万、利率2.85%、首付20%', () {
+    test('北京：公积金上限120万、利率2.85%、首付15%', () {
       final bj = CityPolicy.byKey('beijing');
       expect(bj.maxHousingFundLoanFirst, 120);
       expect(bj.housingFundRateFirst, 0.0285);
-      expect(bj.minDownPaymentRatioFirst, 0.20);
+      expect(bj.minDownPaymentRatioFirst, 0.15);
     });
 
     test('成都：上限120万、优惠利率2.6%', () {

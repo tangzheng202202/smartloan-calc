@@ -125,6 +125,9 @@ class LoanInput extends Equatable {
   /// 首付比例上限
   static const double maxDownPaymentRatio = 0.8;
 
+  /// 首付比例下限（2024-09 起全国商贷最低首付统一为 15%）
+  static const double minDownPaymentRatio = 0.15;
+
   /// 该类别是否带首付设置（房贷/车贷有，消费贷无）
   bool get hasDownPayment =>
       category == LoanCategory.mortgage || category == LoanCategory.car;
@@ -154,7 +157,10 @@ class LoanInput extends Equatable {
   LoanInput withTotalPrice(double yuan) {
     if (!hasDownPayment) return this;
     final total = yuan < 0 ? 0.0 : yuan;
-    final ratio = (downPaymentRatio ?? 0).clamp(0.0, maxDownPaymentRatio);
+    final ratio = (downPaymentRatio ?? 0).clamp(
+      minDownPaymentRatio,
+      maxDownPaymentRatio,
+    );
     final down = (total * ratio).clamp(0.0, total);
     return _resplitCombined(
       copyWith(
@@ -166,11 +172,11 @@ class LoanInput extends Equatable {
     );
   }
 
-  /// 联动：改首付比例 → 首付金额重算（钳制 0–80%）
+  /// 联动：改首付比例 → 首付金额重算（钳制 15%–80%）
   LoanInput withDownPaymentRatio(double ratio) {
     if (!hasDownPayment) return this;
     final total = totalPrice ?? principal;
-    final r = ratio.clamp(0.0, maxDownPaymentRatio);
+    final r = ratio.clamp(minDownPaymentRatio, maxDownPaymentRatio);
     final down = (total * r).clamp(0.0, total);
     return _resplitCombined(
       copyWith(
@@ -181,11 +187,11 @@ class LoanInput extends Equatable {
     );
   }
 
-  /// 联动：改首付金额 → 比例重算（钳制 0 ≤ 首付 ≤ 总价）
+  /// 联动：改首付金额 → 比例重算（钳制 15%·总价 ≤ 首付 ≤ 总价）
   LoanInput withDownPaymentAmount(double yuan) {
     if (!hasDownPayment) return this;
     final total = totalPrice ?? principal;
-    final down = yuan.clamp(0.0, total);
+    final down = yuan.clamp(total * minDownPaymentRatio, total);
     final ratio = total > 0 ? down / total : 0.0;
     return _resplitCombined(
       copyWith(
@@ -202,7 +208,7 @@ class LoanInput extends Equatable {
       return copyWith(principal: yuan < 0 ? 0.0 : yuan);
     }
     final total = totalPrice ?? principal;
-    final loan = yuan.clamp(0.0, total);
+    final loan = yuan.clamp(0.0, total * (1 - minDownPaymentRatio));
     final down = total - loan;
     final ratio = total > 0 ? down / total : 0.0;
     return _resplitCombined(

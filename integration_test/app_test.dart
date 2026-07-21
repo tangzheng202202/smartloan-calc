@@ -142,15 +142,15 @@ void main() {
     expect(m3, isNot(m1));
     expect(m3, contains('¥'));
 
-    // 修改首付金额 50 → 25 万：贷款回到 225 万，月供再次联动
+    // 修改首付金额 50 → 75 万（30%）：贷款变为 175 万，月供再次联动
     await scrollTo(
       tester,
       find.byKey(const Key('input.downPayment')),
       delta: -300,
     );
-    await tester.enterText(find.byKey(const Key('input.downPayment')), '25');
+    await tester.enterText(find.byKey(const Key('input.downPayment')), '75');
     await tester.pumpAndSettle(const Duration(milliseconds: 200));
-    expect(find.text('225 万元'), findsWidgets);
+    expect(find.text('175 万元'), findsWidgets);
     await scrollTo(tester, find.byKey(const Key('result.monthlyPayment')));
     final m4 = monthlyText(tester);
     expect(m4, isNot(m3));

@@ -44,7 +44,7 @@ void main() {
       expect(i.principal, 1600000);
     });
 
-    test('改比例 → 首付金额重算；超过80%被钳制', () {
+    test('改比例 → 首付金额重算；超出 15%–80% 被钳制', () {
       final i = const LoanInput().withDownPaymentRatio(0.5);
       expect(i.downPaymentAmount, 625000);
       expect(i.principal, 625000);
@@ -53,6 +53,11 @@ void main() {
       expect(clamped.downPaymentRatio, 0.8);
       expect(clamped.downPaymentAmount, 1000000);
       expect(clamped.principal, 250000);
+
+      final low = const LoanInput().withDownPaymentRatio(0.05);
+      expect(low.downPaymentRatio, 0.15); // 低于 15% 被钳到下限
+      expect(low.downPaymentAmount, 187500);
+      expect(low.principal, 1062500);
     });
 
     test('改首付金额 → 比例重算；超过总价被钳制为零贷款', () {
@@ -65,6 +70,10 @@ void main() {
       expect(full.downPaymentAmount, 1250000);
       expect(full.principal, 0);
       expect(full.downPaymentRatio, 0.8); // 100% 被钳到上限
+
+      final low = const LoanInput().withDownPaymentAmount(100000);
+      expect(low.downPaymentAmount, 187500); // 低于 15% 总价被钳到下限
+      expect(low.principal, 1062500);
     });
 
     test('编辑派生贷款金额 → 反推首付金额与比例', () {
@@ -74,8 +83,8 @@ void main() {
       expect(i.downPaymentRatio, closeTo(0.28, 1e-9));
 
       final over = const LoanInput().withDerivedLoanAmount(2000000);
-      expect(over.principal, 1250000); // 钳到总价
-      expect(over.downPaymentAmount, 0);
+      expect(over.principal, 1062500); // 钳到总价 85%（最低首付 15%）
+      expect(over.downPaymentAmount, 187500);
     });
 
     test('消费贷调用联动方法无副作用', () {
