@@ -401,6 +401,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'City commercial rate reference (1st / 2nd home)';
 
   @override
+  String get beijingRateNote =>
+      'Beijing: Since 2025-12-24, banks price commercial home loans individually without first/second-home rate tiers. For new housing fund loans over 5 years issued on or after 2025-05-08: first home 2.6%, second home 3.075%. Sources: Beijing Municipal Commission of Housing and Urban-Rural Development and Beijing Housing Provident Fund Management Center.';
+
+  @override
   String get cityBeijing => 'Beijing';
 
   @override

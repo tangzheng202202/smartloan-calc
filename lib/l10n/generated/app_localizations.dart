@@ -849,6 +849,12 @@ abstract class AppLocalizations {
   /// **'各城市商贷利率参考（首套 / 二套）'**
   String get cityPresetTitle;
 
+  /// No description provided for @beijingRateNote.
+  ///
+  /// In zh, this message translates to:
+  /// **'北京：商贷自2025-12-24起由银行逐笔定价，不再区分首套/二套利率；2025-05-08起新发放的5年以上公积金贷款，首套2.6%、二套3.075%。来源：北京市住建委等部门、北京住房公积金管理中心。'**
+  String get beijingRateNote;
+
   /// No description provided for @cityBeijing.
   ///
   /// In zh, this message translates to:

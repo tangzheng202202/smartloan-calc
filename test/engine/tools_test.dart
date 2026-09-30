@@ -76,10 +76,11 @@ void main() {
   });
 
   group('城市政策（移植自 Swift 版测试口径）', () {
-    test('北京：公积金上限120万、利率2.85%、首付15%', () {
+    test('北京：新发放 5 年以上公积金贷款首套 2.6%、二套 3.075%', () {
       final bj = CityPolicy.byKey('beijing');
       expect(bj.maxHousingFundLoanFirst, 120);
-      expect(bj.housingFundRateFirst, 0.0285);
+      expect(bj.housingFundRate(HouseType.first), 0.026);
+      expect(bj.housingFundRate(HouseType.second), 0.03075);
       expect(bj.minDownPaymentRatioFirst, 0.15);
     });
 
@@ -138,18 +139,13 @@ void main() {
       );
     });
 
-    test('商贷利率 = LPR + 浮动', () {
-      // 严格保留原 Swift 代码语义：浮动值为小数（-0.005 = -50BP）。
-      // 注意：原代码注释 "-5BP = 3.45%" 与其实际数值不一致
-      // （-0.005 实为 -50BP，结果 3.0%），此处按代码行为断言。
-      expect(
-        CityPolicy.byKey('beijing').commercialRate(HouseType.first),
-        closeTo(0.030, 1e-12),
-      );
-      expect(
-        CityPolicy.byKey('beijing').commercialRate(HouseType.second),
-        closeTo(0.040, 1e-12),
-      );
+    test('北京商贷逐笔定价，不提供首套或二套固定参考值', () {
+      final bj = CityPolicy.byKey('beijing');
+      expect(bj.commercialRate(HouseType.first), isNull);
+      expect(bj.commercialRate(HouseType.second), isNull);
+    });
+
+    test('其他城市商贷利率仍按静态 LPR + 浮动计算', () {
       expect(
         CityPolicy.byKey('shanghai').commercialRate(HouseType.first),
         closeTo(0.029, 1e-12),
