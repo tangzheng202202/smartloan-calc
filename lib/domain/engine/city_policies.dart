@@ -181,7 +181,7 @@ class CityPolicy {
   /// 计算公积金可贷额度（元）
   ///
   /// 与原 Swift 版 `City.calculateHousingFundLoanable` 一致：
-  /// min(余额合计 × 倍数 × 1万, 房价 × 最高贷款成数, 政策上限 × 1万)
+  /// min(余额合计（元）× 倍数, 房价（元）× 最高贷款成数, 政策上限（万元）× 1万)
   double housingFundLoanable({
     required double balance,
     double spouseBalance = 0,
@@ -189,7 +189,7 @@ class CityPolicy {
     required HouseType houseType,
   }) {
     final totalBalance = balance + spouseBalance;
-    final maxByBalance = totalBalance * balanceMultiplier * 10000;
+    final maxByBalance = totalBalance * balanceMultiplier;
     final maxByPrice =
         housePrice *
         (houseType == HouseType.first ? maxLoanRatioFirst : maxLoanRatioSecond);

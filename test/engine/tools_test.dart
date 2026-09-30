@@ -96,7 +96,7 @@ void main() {
     });
 
     test('公积金可贷额度：北京 余额10万 房价450万 → 120万', () {
-      // 与原 Swift 测试一致：min(余额×15×1万, 450万×0.8, 120万) = 120万
+      // 与 Swift 测试一致：min(余额×15, 450万×0.85, 120万) = 120万
       final loanable = CityPolicy.byKey('beijing').housingFundLoanable(
         balance: 100000,
         housePrice: 4500000,
@@ -113,8 +113,29 @@ void main() {
         houseType: HouseType.first,
       );
       expect(loanable, greaterThan(0));
-      // min(10万×15×1万, 720万×0.8, 120万) = 120万
+      // min(10万×15, 720万×0.85, 120万) = 120万
       expect(loanable, closeTo(1200000, 0.01));
+    });
+
+    test('低余额按元乘倍数，配偶余额只加一次', () {
+      final city = CityPolicy.byKey('beijing');
+      expect(
+        city.housingFundLoanable(
+          balance: 1000,
+          housePrice: 4500000,
+          houseType: HouseType.first,
+        ),
+        15000,
+      );
+      expect(
+        city.housingFundLoanable(
+          balance: 1000,
+          spouseBalance: 1000,
+          housePrice: 4500000,
+          houseType: HouseType.first,
+        ),
+        30000,
+      );
     });
 
     test('商贷利率 = LPR + 浮动', () {
