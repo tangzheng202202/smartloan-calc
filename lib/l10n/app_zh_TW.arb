@@ -139,6 +139,7 @@
   "compareResultLabel": "利息差（固定 − 浮動）",
   "monthlyDiffLabel": "月供差（浮動 − 固定）",
   "cityPresetTitle": "各城市商貸利率參考（首套 / 二套）",
+  "beijingRateNote": "北京：商貸自2025-12-24起由銀行逐筆定價，不再區分首套/二套利率；2025-05-08起新發放的5年以上公積金貸款，首套2.6%、二套3.075%。來源：北京市住建委等部門、北京住房公積金管理中心。",
   "cityBeijing": "北京",
   "cityShanghai": "上海",
   "cityGuangzhou": "廣州",

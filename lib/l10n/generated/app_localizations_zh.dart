@@ -393,6 +393,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cityPresetTitle => '各城市商贷利率参考（首套 / 二套）';
 
   @override
+  String get beijingRateNote =>
+      '北京：商贷自2025-12-24起由银行逐笔定价，不再区分首套/二套利率；2025-05-08起新发放的5年以上公积金贷款，首套2.6%、二套3.075%。来源：北京市住建委等部门、北京住房公积金管理中心。';
+
+  @override
   String get cityBeijing => '北京';
 
   @override
@@ -921,6 +925,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get cityPresetTitle => '各城市商貸利率參考（首套 / 二套）';
+
+  @override
+  String get beijingRateNote =>
+      '北京：商貸自2025-12-24起由銀行逐筆定價，不再區分首套/二套利率；2025-05-08起新發放的5年以上公積金貸款，首套2.6%、二套3.075%。來源：北京市住建委等部門、北京住房公積金管理中心。';
 
   @override
   String get cityBeijing => '北京';

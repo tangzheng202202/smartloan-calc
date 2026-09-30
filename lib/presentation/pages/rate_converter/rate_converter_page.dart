@@ -212,7 +212,9 @@ class _RateConverterPageState extends State<RateConverterPage> {
                 children: [
                   Text(l10n.cityPresetTitle, style: theme.textTheme.titleSmall),
                   const SizedBox(height: 8),
-                  for (final city in CityPolicy.cities)
+                  Text(l10n.beijingRateNote, style: theme.textTheme.bodyMedium),
+                  const Divider(height: 16),
+                  for (final city in CityPolicy.cities.where((c) => c.key != 'beijing'))
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
@@ -226,8 +228,8 @@ class _RateConverterPageState extends State<RateConverterPage> {
                           ),
                           Expanded(
                             child: Text(
-                              '${Formatters.percent(city.commercialRate(HouseType.first))} / '
-                              '${Formatters.percent(city.commercialRate(HouseType.second))}',
+                              '${Formatters.percent(city.commercialRate(HouseType.first)!)} / '
+                              '${Formatters.percent(city.commercialRate(HouseType.second)!)}',
                               style: theme.textTheme.bodyMedium,
                             ),
                           ),

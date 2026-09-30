@@ -42,11 +42,11 @@ class CityPolicy {
   /// 公积金余额计算倍数
   final double balanceMultiplier;
 
-  /// 商贷首套浮动（相对 LPR，小数）
-  final double commercialFloatingFirst;
+  /// 商贷首套浮动（相对 LPR，小数）；逐笔定价时为 null
+  final double? commercialFloatingFirst;
 
-  /// 商贷二套浮动（相对 LPR，小数）
-  final double commercialFloatingSecond;
+  /// 商贷二套浮动（相对 LPR，小数）；逐笔定价时为 null
+  final double? commercialFloatingSecond;
 
   const CityPolicy({
     required this.key,
@@ -74,15 +74,19 @@ class CityPolicy {
       nameZh: '北京',
       maxHousingFundLoanFirst: 120,
       maxHousingFundLoanSecond: 100,
-      housingFundRateFirst: 0.0285,
+      // 2025-05-08 起新发放、期限 5 年以上的公积金贷款。
+      // https://gjj.beijing.gov.cn/web/zwgk61/2024zcwj/436433464/436433467/743903614/index.html
+      housingFundRateFirst: 0.026,
       housingFundRateSecond: 0.03075,
       minDownPaymentRatioFirst: 0.15,
       minDownPaymentRatioSecond: 0.25,
       maxLoanRatioFirst: 0.85,
       maxLoanRatioSecond: 0.75,
       balanceMultiplier: 15,
-      commercialFloatingFirst: -0.005,
-      commercialFloatingSecond: 0.005,
+      // 2025-12-24 起商贷逐笔定价，不再按首套/二套设置固定利率浮动。
+      // https://www.beijing.gov.cn/gate/big5/www.beijing.gov.cn/zhengce/zhengcefagui/202512/t20251225_4361661.html
+      commercialFloatingFirst: null,
+      commercialFloatingSecond: null,
     ),
     CityPolicy(
       key: 'shanghai',
@@ -170,18 +174,18 @@ class CityPolicy {
       ? housingFundRateFirst
       : housingFundRateSecond;
 
-  /// 商贷利率 = LPR + 浮动（与原 Swift 版 `calculateCommercialRate` 一致）
-  double commercialRate(HouseType houseType) {
+  /// 商贷利率 = LPR + 浮动；逐笔定价的城市返回 null。
+  double? commercialRate(HouseType houseType) {
     final floating = houseType == HouseType.first
         ? commercialFloatingFirst
         : commercialFloatingSecond;
-    return lprBase + floating;
+    return floating == null ? null : lprBase + floating;
   }
 
   /// 计算公积金可贷额度（元）
   ///
   /// 与原 Swift 版 `City.calculateHousingFundLoanable` 一致：
-  /// min(余额合计 × 倍数 × 1万, 房价 × 最高贷款成数, 政策上限 × 1万)
+  /// min(余额合计（元）× 倍数, 房价（元）× 最高贷款成数, 政策上限（万元）× 1万)
   double housingFundLoanable({
     required double balance,
     double spouseBalance = 0,
@@ -189,7 +193,7 @@ class CityPolicy {
     required HouseType houseType,
   }) {
     final totalBalance = balance + spouseBalance;
-    final maxByBalance = totalBalance * balanceMultiplier * 10000;
+    final maxByBalance = totalBalance * balanceMultiplier;
     final maxByPrice =
         housePrice *
         (houseType == HouseType.first ? maxLoanRatioFirst : maxLoanRatioSecond);
